@@ -99,33 +99,40 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
                 modelErrors.Add(_localizer["MissingName"]);
             }
 
+
             if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
             {
                 modelErrors.Add(_localizer["MissingPrice"]);
             }
 
-            if (!Double.TryParse(product.Price, out double pc))
+            if (!Double.TryParse(product.Price, out double priceIsADouble))
             {
                 modelErrors.Add(_localizer["PriceNotANumber"]);
             }
+
+            //if (!Double.TryParse(product.Price, out double pc))
+            //{
+            //    modelErrors.Add(_localizer["PriceNotANumber"]);
+            //}
             else
             {
-                if (pc <= 0)
+                if (priceIsADouble <= 0)
                     modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
             }
+
 
             if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
             {
                 modelErrors.Add(_localizer["MissingQuantity"]);
             }
 
-            if (!int.TryParse(product.Stock, out int qt))
+            if (!int.TryParse(product.Stock, out int quantity))
             {
                 modelErrors.Add(_localizer["StockNotAnInteger"]);
             }
             else
             {
-                if (qt <= 0)
+                if (quantity <= 0)
                     modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
             }
 
