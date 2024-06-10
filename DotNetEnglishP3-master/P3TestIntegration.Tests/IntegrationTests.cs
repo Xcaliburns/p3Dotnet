@@ -1,6 +1,11 @@
+
+using Xunit;
+
+
+
 namespace P3TestIntegration.Tests
 {
-    public class UnitTest1
+    public class IntegrationTests
     {
         [Fact]
         public void Test1()
