@@ -82,3 +82,5 @@ app.MapControllerRoute(
 await IdentitySeedData.EnsurePopulated(app);
 
 app.Run();
+
+public partial class Program { }  //declaration de classe partielle pour permettre la déclaration de méthodes dans le même fichier
