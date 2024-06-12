@@ -135,9 +135,7 @@ namespace P3DotNetCore.Tests.Integration
             var products = await productRepository.GetProduct();
             Assert.Contains(products, p => p.Name == product.Name);
 
-            //redirection vers la page Admin
-            //var redirectToActionResult = Assert.IsType<RedirectToActionResult>("Admin");
-            //Assert.Equal("Admin", redirectToActionResult.ActionName);
+            
 
         }
     }
