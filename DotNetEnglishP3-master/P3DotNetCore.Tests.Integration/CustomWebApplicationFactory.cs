@@ -34,7 +34,7 @@ namespace P3DotNetCore.Tests.Integration
 
                 services.AddSingleton<DbConnection>(container =>
                 {
-                    var connection = new SqlConnection("Server=.;Database=integrations_tests;User Id=Admin;Password=P@ssword123;");
+                    var connection = new SqlConnection("Server=.;Database=integration_tests;User Id=699cc797-fc68-4207-bf21-97c219e6f255;Password=P@ssword123;");
                     connection.Open();
 
                     return connection;

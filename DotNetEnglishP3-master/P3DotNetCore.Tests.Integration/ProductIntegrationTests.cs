@@ -22,17 +22,24 @@ namespace P3DotNetCore.Tests.Integration
 	public class ProductIntegrationTests : IClassFixture<CustomWebApplicationFactory<Program>>
 	{
         private readonly HttpClient _client;
-        private readonly CustomWebApplicationFactory<Program>
-            _factory;
+        private readonly CustomWebApplicationFactory<Program> _factory;
+        private readonly IProductService _productService;
 
-        public ProductIntegrationTests()
-		{
-            _factory = new CustomWebApplicationFactory<Program>();
+        public ProductIntegrationTests(CustomWebApplicationFactory<Program> factory)
+        {
+            _factory = factory;
             _client = _factory.CreateClient();
+
+            // Utilisez le service provider du factory pour obtenir une instance de IProductService
+            using var scope = _factory.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            _productService = serviceProvider.GetRequiredService<IProductService>();
         }
 
 
-		[Fact]
+
+
+        [Fact]
 		public void Create_ReturnsviewResult_WhenModelStateIsNotValid()
 		{
 
@@ -42,17 +49,18 @@ namespace P3DotNetCore.Tests.Integration
             var serviceProvider = scope.ServiceProvider;
             var context = serviceProvider.GetRequiredService<P3Referential>();
 
-           
-           
-            ICart cart = new Cart();
-            IProductRepository productRepository = new ProductRepository(context);
-            IOrderRepository orderRepository = new OrderRepository(context);
+
+
+
+            ICart cart = serviceProvider.GetRequiredService<ICart>();
+            IProductRepository productRepository = serviceProvider.GetRequiredService<IProductRepository>();
+            IOrderRepository orderRepository = serviceProvider.GetRequiredService<IOrderRepository>();
             IStringLocalizer localizer = serviceProvider.GetRequiredService<IStringLocalizer<ProductController>>();
-            IProductService IProductService = new ProductService(cart, productRepository, orderRepository, localizer);
-            ILanguageService ILanguageService = new LanguageService();
+            
+            ILanguageService languageService = serviceProvider.GetRequiredService<ILanguageService>();
 
 
-            var controller = new ProductController(IProductService,ILanguageService);
+            var controller = new ProductController(_productService,languageService);
 
 
 			var product = new ProductViewModel
@@ -78,5 +86,59 @@ namespace P3DotNetCore.Tests.Integration
             Assert.Equal(product, viewResult.Model);
 
         }
-	}
+
+        [Fact]
+        public async Task Create_AddProduct_WhenModelStateIsValid()
+        {
+
+            // Arrange
+
+            using var scope = _factory.Services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<P3Referential>();
+
+
+
+            ICart cart = serviceProvider.GetRequiredService<ICart>();
+            IProductRepository productRepository = serviceProvider.GetRequiredService<IProductRepository>();
+            IOrderRepository orderRepository = serviceProvider.GetRequiredService<IOrderRepository>();
+            IStringLocalizer localizer = serviceProvider.GetRequiredService<IStringLocalizer<ProductController>>();
+           
+            ILanguageService languageService = serviceProvider.GetRequiredService<ILanguageService>();
+
+
+            var controller = new ProductController(_productService, languageService);
+
+
+            var product = new ProductViewModel
+            {
+                // Je délare un produit qui  correspond  aux règles de validation
+                Name = "toto",
+                Price = "10",
+                Stock = "10",
+                Description = "Description 1",
+                Details = "Details 1"
+            };
+
+
+
+            // Act
+
+            // var result = controller.Create(product);
+             _productService.SaveProduct(product);
+
+            // Assert
+
+
+
+            // Vérifiez que le produit a été ajouté à la base de données
+            var products = await productRepository.GetProduct();
+            Assert.Contains(products, p => p.Name == product.Name);
+
+            //redirection vers la page Admin
+            //var redirectToActionResult = Assert.IsType<RedirectToActionResult>("Admin");
+            //Assert.Equal("Admin", redirectToActionResult.ActionName);
+
+        }
+    }
 }

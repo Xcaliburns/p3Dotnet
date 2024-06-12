@@ -16,10 +16,10 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IStringLocalizer<ProductService> _localizer;
-        private ICart cart;
-        private IProductRepository productRepository;
-        private IOrderRepository orderRepository;
-        private IStringLocalizer localizer;
+        //private ICart cart;
+        //private IProductRepository productRepository;
+        //private IOrderRepository orderRepository;
+        //private IStringLocalizer localizer;
 
         public ProductService(ICart cart, IProductRepository productRepository,
             IOrderRepository orderRepository, IStringLocalizer<ProductService> localizer)
@@ -30,13 +30,13 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             _localizer = localizer;
         }
 
-        public ProductService(ICart cart, IProductRepository productRepository, IOrderRepository orderRepository, IStringLocalizer localizer)
-        {
-            this.cart = cart;
-            this.productRepository = productRepository;
-            this.orderRepository = orderRepository;
-            this.localizer = localizer;
-        }
+        //public ProductService(ICart cart, IProductRepository productRepository, IOrderRepository orderRepository, IStringLocalizer localizer)
+        //{
+        //    this.cart = cart;
+        //    this.productRepository = productRepository;
+        //    this.orderRepository = orderRepository;
+        //    this.localizer = localizer;
+        //}
 
         public List<ProductViewModel> GetAllProductsViewModel()
         {
