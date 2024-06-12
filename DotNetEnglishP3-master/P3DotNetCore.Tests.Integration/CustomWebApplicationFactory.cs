@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using P3AddNewFunctionalityDotNetCore;
+using P3AddNewFunctionalityDotNetCore.Data;
 
 namespace P3DotNetCore.Tests.Integration
 {
@@ -33,17 +34,17 @@ namespace P3DotNetCore.Tests.Integration
 
                 services.AddSingleton<DbConnection>(container =>
                 {
-                    var connection = new SqlConnection("Server=myServerAddress;Database=integrations_tests;User Id=myUsername;Password=myPassword;");
+                    var connection = new SqlConnection("Server=.;Database=integrations_tests;User Id=Admin;Password=P@ssword123;");
                     connection.Open();
 
                     return connection;
                 });
 
-               services.AddDbContext<DbContext>((container, options) =>
-{
-    var connection = container.GetRequiredService<DbConnection>();
-    options.UseSqlServer(connection);
-});
+                services.AddDbContext<P3Referential>((container, options) =>
+ {
+     var connection = container.GetRequiredService<DbConnection>();
+     options.UseSqlServer(connection);
+ });
             });
 
             builder.UseEnvironment("Development");
