@@ -15,17 +15,18 @@ using P3AddNewFunctionalityDotNetCore.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 
 
 namespace P3DotNetCore.Tests.Integration
 {
-    public class ProductIntegrationTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ProductIntegrationTests02 : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly IProductService _productService;
 
-        public ProductIntegrationTests(CustomWebApplicationFactory<Program> factory)
+        public ProductIntegrationTests02(CustomWebApplicationFactory<Program> factory)
         {
             _factory = factory;
             _client = _factory.CreateClient();
@@ -90,7 +91,7 @@ namespace P3DotNetCore.Tests.Integration
             var serviceProvider = scope.ServiceProvider;
             var context = serviceProvider.GetRequiredService<P3Referential>();
 
-
+            
             ICart cart = serviceProvider.GetRequiredService<ICart>();
             IProductRepository productRepository = serviceProvider.GetRequiredService<IProductRepository>();
             IOrderRepository orderRepository = serviceProvider.GetRequiredService<IOrderRepository>();
