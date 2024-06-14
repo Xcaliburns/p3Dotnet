@@ -30,28 +30,28 @@ namespace P3DotNetCore.Tests.Integration
                 services.Remove(dbContextDescriptor);
 
                 // Nouveau DbContext avec la configuration souhaitée
-                services.AddDbContext<P3Referential>(options =>
-                    options.UseInMemoryDatabase("TestDb"));
+                //services.AddDbContext<P3Referential>(options =>
+                //    options.UseInMemoryDatabase("TestDb"));
 
-                //var dbConnectionDescriptor = services.SingleOrDefault(
-                //    d => d.ServiceType ==
-                //        typeof(DbConnection));
-                // Utiliser une db en dur pour les tests
-                //               services.AddSingleton<DbConnection>(container =>
-                //               {
-                //                   //var connection = new SqlConnection("Server=.;Database=integration_tests;User Id=699cc797-fc68-4207-bf21-97c219e6f255;Password=P@ssword123;");
-                //                   //connection.Open();
-                //                   var connection = new SqlConnection("Server=.;Database=integration_tests;Trusted_Connection=True;MultipleActiveResultSets=true");
-                //                   connection.Open();
+                var dbConnectionDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType ==
+                        typeof(DbConnection));
+               // Utiliser une db en dur pour les tests
+                               services.AddSingleton<DbConnection>(container =>
+                               {
+                                   //var connection = new SqlConnection("Server=.;Database=integration_tests;User Id=699cc797-fc68-4207-bf21-97c219e6f255;Password=P@ssword123;");
+                                   //connection.Open();
+                                   var connection = new SqlConnection("Server=.;Database=TestBase;Trusted_Connection=True;MultipleActiveResultSets=true");
+                                   connection.Open();
 
-                //                   return connection;
-                //               });
+                                   return connection;
+                               });
 
-                //               services.AddDbContext<P3Referential>((container, options) =>
-                //{
-                //    var connection = container.GetRequiredService<DbConnection>();
-                //    options.UseSqlServer(connection);
-                //});
+                services.AddDbContext<P3Referential>((container, options) =>
+ {
+     var connection = container.GetRequiredService<DbConnection>();
+     options.UseSqlServer(connection);
+ });
             });
 
             builder.UseEnvironment("Development");
