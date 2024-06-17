@@ -1,37 +1,39 @@
 ﻿using Xunit;
-using System.ComponentModel.DataAnnotations;
-using P3AddNewFunctionalityDotNetCore.Models.ViewModels; // ne pas oublier la référence au projet contenant le modèle
+// ne pas oublier la référence au projet contenant le modèle
+using P3AddNewFunctionalityDotNetCore.Models.ViewModels; 
 using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Moq;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
 using P3AddNewFunctionalityDotNetCore.Models;
-using System.Linq;
+
 
 
 namespace P3AddNewFunctionalityDotNetCore;
 public class ProductViewModelTests
 {
 
-    [Fact]
+    private Mock<ICart> mockCart;
+    private Mock<IOrderRepository> mockOrder;
+    private Mock<IProductRepository> mockProductRepository;
+    private Mock<IStringLocalizer<ProductService>> mockStringLocalizer;
+    private ProductService productService;
 
-    public void ExampleTest()
+    public ProductViewModelTests()
     {
-        //Arrange
-        //Act
-        //Assert
+        mockCart = new Mock<ICart>();
+        mockOrder = new Mock<IOrderRepository>();
+        mockProductRepository = new Mock<IProductRepository>();
+        mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+        productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
     }
+
 
     [Fact]
     public void When_PriceIsMissing_Returns_ErrorMessage()
     {
-        //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+        //Arrange      
 
         var error = new LocalizedString("MissingPrice", "Price is missing");
         mockStringLocalizer.Setup(ml => ml["MissingPrice"]).Returns(error);
@@ -73,12 +75,7 @@ public class ProductViewModelTests
     public void When_PriceIsIsNotGreaterThanZero_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
+        
         var error = new LocalizedString("PriceNotGreaterThanZero", "The price must be greater than zero");
         mockStringLocalizer.Setup(ml => ml["PriceNotGreaterThanZero"]).Returns(error);
 
@@ -96,12 +93,7 @@ public class ProductViewModelTests
     public void When_MissingName_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
+       
         var error = new LocalizedString("MissingName", "Please enter a name");
         mockStringLocalizer.Setup(ml => ml["MissingName"]).Returns(error);
 
@@ -119,12 +111,7 @@ public class ProductViewModelTests
     public void When_MissingQuantity_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
+       
         var error = new LocalizedString("MissingQuantity", "Please enter a stock value");
         mockStringLocalizer.Setup(ml => ml["MissingQuantity"]).Returns(error);
 
@@ -142,12 +129,7 @@ public class ProductViewModelTests
     public void When_StockNotAnInteger_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
+       
         var error = new LocalizedString("StockNotAnInteger", "The value entered for the stock must be a integer");
         mockStringLocalizer.Setup(ml => ml["StockNotAnInteger"]).Returns(error);
 
@@ -165,12 +147,7 @@ public class ProductViewModelTests
     public void When_StockNotGreaterThanZero_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
+      
         var error = new LocalizedString("StockNotGreaterThanZero", "The stock must greater than zero");
         mockStringLocalizer.Setup(ml => ml["StockNotGreaterThanZero"]).Returns(error);
 
@@ -185,23 +162,17 @@ public class ProductViewModelTests
     }
 
     [Fact]
-    public void When_ModelIsValid_Returns_Null()
+    public void When_ModelIsValid_Returns_EmptyList()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
-
+       
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "toto", Price = "2.22", Description = "Test", Stock = "2", Details = "test" });
 
         //Assert
-        Assert.True(result[0] == null && result.Count == 1);
+        Assert.True(result.Count==0);
     }
 
 }

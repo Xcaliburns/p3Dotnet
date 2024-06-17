@@ -16,15 +16,18 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         public string Details { get; set; }
 
-        [Required(ErrorMessage = "MissingQuantity")]  // l'ordre des verifications est importante pour certains tests
+        // verification order is important for some tests
+        [Required(ErrorMessage = "MissingQuantity")]  
         [RegularExpression(@"^-?\d+$", ErrorMessage = "StockNotAnInteger")]
         [Range(1, int.MaxValue, ErrorMessage = "StockNotGreaterThanZero")]
        
         public string Stock { get; set; }
 
-        [Required(ErrorMessage = "MissingPrice")]// l'ordre des verifications est importante pour certains tests
+        // verification order is important for some tests
+        [Required(ErrorMessage = "MissingPrice")]
         [RegularExpression(@"^-?\d+(\.\d+)?$", ErrorMessage = "PriceNotANumber")]
-        [Range(double.Epsilon, int.MaxValue, ErrorMessage = "PriceNotGreaterThanZero")]// double.epsilon est la plus petite valeur au dessus de zero
+        // double.epsilon est la plus petite valeur au dessus de zero
+        [Range(double.Epsilon, int.MaxValue, ErrorMessage = "PriceNotGreaterThanZero")]
         
         public string Price { get; set; }
     }
