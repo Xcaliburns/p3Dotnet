@@ -147,7 +147,7 @@ namespace P3DotNetCore.Tests.Integration
 
 
             var controller = new ProductController(_productService, languageService);
-
+            // l'id est à changer en fonction de l'id du produit à supprimer
             var productId = 53;
             // il faut s'assurer que le produit existe dans la base de données et ensuite l'effacer
 

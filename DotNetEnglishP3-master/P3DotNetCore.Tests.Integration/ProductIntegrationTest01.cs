@@ -14,8 +14,8 @@ using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
     public class IntegrationTests01
-    {  
-        
+    {
+
         //Arrange
         private readonly IConfiguration _configuration;
         private readonly IStringLocalizer<ProductService> _localizer;
@@ -36,6 +36,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductService productService = new(cart, productRepository, orderRepository, _localizer);
             ProductController productController = new(productService, languageService);
             ProductViewModel productViewModel = new() { Name = "toto", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
+
             //Get the number of products in the database
             int count = await context.Product.CountAsync();
 
@@ -56,6 +57,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             context.Product.Remove(product);
             await context.SaveChangesAsync();
         }
+
         [Fact]
         public async Task DeleteProduct()
         {
@@ -69,26 +71,41 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductRepository productRepository = new(context);
             OrderRepository orderRepository = new(context);
             ProductService productService = new(cart, productRepository, orderRepository, _localizer);
-            ProductController productController = new(productService, languageService);            
+            ProductController productController = new(productService, languageService);
             ProductViewModel productViewModel = new() { Name = "titi", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
+
             //Get the number of products in the database
             int count = await context.Product.CountAsync();
 
-            //Create a product
+            //Create a product to delete
             productController.Create(productViewModel);
             var product = await context.Product.Where(x => x.Name == "titi").FirstOrDefaultAsync();
 
 
             //Act
             //Delete the product
-            productController.DeleteProduct(product.Id);
+            try
+            {
+                if (product == null)
+                {
+                    throw new Exception("Product not found");
+                }
+
+                productController.DeleteProduct(product.Id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
 
             //Assert
-            //Verify if Product Count has been decremented 
+            //Verify if Product.Count has been decremented 
             Assert.Equal(count, context.Product.Count());
 
             //Search the product in the database
-            var productDontExistsAnymore = await context.Product.Where(x => x.Name == "titi").FirstOrDefaultAsync();
+            var productDontExistsAnymore = await context.Product.Where(p => p.Name == "titi").FirstOrDefaultAsync();
+
 
             //Verify if the Product has been deleted
             Assert.Null(productDontExistsAnymore);

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P3AddNewFunctionalityDotNet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P3AddNewFunctionalityDotNetCore", "P3AddNewFunctionalityDotNetCore\P3AddNewFunctionalityDotNetCore.csproj", "{752FB11B-71BE-4ECC-923A-997D50794E8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P3DotNetCore.Tests.Integration", "P3DotNetCore.Tests.Integration\P3DotNetCore.Tests.Integration.csproj", "{904B3C60-C163-4715-9920-6998C5D215CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P3DotNetCore.Tests.Integration", "P3DotNetCore.Tests.Integration\P3DotNetCore.Tests.Integration.csproj", "{904B3C60-C163-4715-9920-6998C5D215CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
