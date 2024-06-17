@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using NuGet.ContentModel;
 using P3AddNewFunctionalityDotNetCore.Controllers;
 using P3AddNewFunctionalityDotNetCore.Data;
 using P3AddNewFunctionalityDotNetCore.Models;
@@ -17,32 +16,44 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
     {
 
         //Arrange
-        private readonly IConfiguration _configuration;
-        private readonly IStringLocalizer<ProductService> _localizer;
 
+        private readonly IConfiguration? _configuration;
+        private readonly IStringLocalizer<ProductService>? _localizer;
+        private P3Referential? context;
+        private ProductService? productService;
+        private ProductController? productController;
+
+
+        public IntegrationTests01()
+        {
+            var options = new DbContextOptionsBuilder<P3Referential>()
+                .UseSqlServer("Data Source=.;Initial Catalog=TestBase;Integrated Security=True").Options;
+
+            IConfiguration configuration = new ConfigurationBuilder().Build();
+
+
+            context = new P3Referential(options, configuration);
+            LanguageService languageService = new();
+            Cart cart = new();
+            ProductRepository productRepository = new(context);
+            OrderRepository orderRepository = new(context);
+            productService = new(cart, productRepository, orderRepository, _localizer);
+            productController = new(productService, languageService);
+        }
 
         [Fact]
         public async Task SaveNewProduct()
         {
             //Arrange        
-            var options = new DbContextOptionsBuilder<P3Referential>()
-             .UseSqlServer("Data Source=.;Initial Catalog=TestBase;Integrated Security=True").Options;
 
-            P3Referential context = new(options, _configuration);
-            LanguageService languageService = new();
-            Cart cart = new();
-            ProductRepository productRepository = new(context);
-            OrderRepository orderRepository = new(context);
-            ProductService productService = new(cart, productRepository, orderRepository, _localizer);
-            ProductController productController = new(productService, languageService);
-            ProductViewModel productViewModel = new() { Name = "toto", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
+            ProductViewModel expectedProduct = new() { Name = "toto", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
             //Get the number of products in the database
             int count = await context.Product.CountAsync();
 
 
             //Act
-            productController.Create(productViewModel);
+            productController.Create(expectedProduct);
 
 
             //Assert
@@ -50,11 +61,16 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.Equal(count + 1, context.Product.Count());
 
             //Search if the product exists in the database
-            var product = await context.Product.Where(x => x.Name == "toto").FirstOrDefaultAsync();
-            Assert.NotNull(product);
+            var result = await context.Product.Where(x => x.Name == "toto").FirstOrDefaultAsync();
+            Assert.NotNull(result);
+            Assert.True(result.Name == expectedProduct.Name);
+            Assert.True(result.Description == expectedProduct.Description);
+            Assert.True(result.Details == expectedProduct.Details);
+            Assert.True(result.Quantity == int.Parse(expectedProduct.Stock));
+            //  Assert.True(result.Price == decimal.Parse(expectedProduct.Price));
 
             // Cleaning Database to reset the state
-            context.Product.Remove(product);
+            context.Product.Remove(result);
             await context.SaveChangesAsync();
         }
 
@@ -62,16 +78,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         public async Task DeleteProduct()
         {
             //Arrange        
-            var options = new DbContextOptionsBuilder<P3Referential>()
-            .UseSqlServer("Data Source=.;Initial Catalog=TestBase;Integrated Security=True").Options;
 
-            P3Referential context = new(options, _configuration);
-            LanguageService languageService = new();
-            Cart cart = new();
-            ProductRepository productRepository = new(context);
-            OrderRepository orderRepository = new(context);
-            ProductService productService = new(cart, productRepository, orderRepository, _localizer);
-            ProductController productController = new(productService, languageService);
             ProductViewModel productViewModel = new() { Name = "titi", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
             //Get the number of products in the database
@@ -84,19 +91,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             //Act
             //Delete the product
-            try
-            {
-                if (product == null)
-                {
-                    throw new Exception("Product not found");
-                }
 
-                productController.DeleteProduct(product.Id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+
+            productController.DeleteProduct(product.Id);
+
 
 
             //Assert

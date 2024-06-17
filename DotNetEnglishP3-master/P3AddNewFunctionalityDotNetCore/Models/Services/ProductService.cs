@@ -16,10 +16,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IStringLocalizer<ProductService> _localizer;
-        //private ICart cart;
-        //private IProductRepository productRepository;
-        //private IOrderRepository orderRepository;
-        //private IStringLocalizer localizer;
+      
 
         public ProductService(ICart cart, IProductRepository productRepository,
             IOrderRepository orderRepository, IStringLocalizer<ProductService> localizer)
@@ -30,13 +27,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             _localizer = localizer;
         }
 
-        //public ProductService(ICart cart, IProductRepository productRepository, IOrderRepository orderRepository, IStringLocalizer localizer)
-        //{
-        //    this.cart = cart;
-        //    this.productRepository = productRepository;
-        //    this.orderRepository = orderRepository;
-        //    this.localizer = localizer;
-        //}
+        
 
         public List<ProductViewModel> GetAllProductsViewModel()
         {
@@ -117,16 +108,13 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             {
                 modelErrors.Add(_localizer["MissingPrice"]);
             }
-
-            if (!Double.TryParse(product.Price, out double priceIsADouble))
+            // NumberStyles.Any, CultureInfo.InvariantCulture  => to allow the price to be a double with a dot or a comma
+            if (!double.TryParse(product.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceIsADouble))
             {
-                modelErrors.Add(_localizer["PriceNotANumber"]);
+                modelErrors.Add(_localizer["PriceNotANumber"]); 
             }
 
-            //if (!Double.TryParse(product.Price, out double pc))
-            //{
-            //    modelErrors.Add(_localizer["PriceNotANumber"]);
-            //}
+            
             else
             {
                 if (priceIsADouble <= 0)
