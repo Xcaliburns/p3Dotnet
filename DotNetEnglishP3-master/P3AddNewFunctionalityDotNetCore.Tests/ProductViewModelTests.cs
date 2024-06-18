@@ -52,13 +52,8 @@ public class ProductViewModelTests
     public void When_PriceIsIsNotANumber_Returns_ErrorMessage()
     {
         //Arrange
-        Mock<ICart> mockCart = new Mock<ICart>();
-        Mock<IOrderRepository> mockOrder = new Mock<IOrderRepository>();
-        Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
-        Mock<IProductService> mockProductService = new Mock<IProductService>();
-        Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-
-        var error = new LocalizedString("PriceNotANumber", "Price is not an integer");
+        
+        var error = new LocalizedString("PriceNotANumber", "Price is not number");
         mockStringLocalizer.Setup(ml => ml["PriceNotANumber"]).Returns(error);
 
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);

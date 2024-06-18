@@ -17,7 +17,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         //Arrange
 
-        private readonly IConfiguration? _configuration;
         private readonly IStringLocalizer<ProductService>? _localizer;
         private P3Referential? context;
         private ProductService? productService;
@@ -67,7 +66,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.True(result.Description == expectedProduct.Description);
             Assert.True(result.Details == expectedProduct.Details);
             Assert.True(result.Quantity == int.Parse(expectedProduct.Stock));
-            //  Assert.True(result.Price == decimal.Parse(expectedProduct.Price));
+            Assert.True(result.Price == double.Parse(expectedProduct.Price));
+            
 
             // Cleaning Database to reset the state
             context.Product.Remove(result);
@@ -92,10 +92,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             //Act
             //Delete the product
 
-
             productController.DeleteProduct(product.Id);
-
-
 
             //Assert
             //Verify if Product.Count has been decremented 
