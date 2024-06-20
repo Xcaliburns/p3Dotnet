@@ -24,7 +24,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         private ProductController? productController;
 
 
-       
+
         public IntegrationTests01()
         {
             var projectPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
@@ -74,7 +74,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.True(result.Details == expectedProduct.Details);
             Assert.True(result.Quantity == int.Parse(expectedProduct.Stock));
             Assert.True(result.Price == double.Parse(expectedProduct.Price));
-            
+
 
             // Cleaning Database to reset the state
             context.Product.Remove(result);
