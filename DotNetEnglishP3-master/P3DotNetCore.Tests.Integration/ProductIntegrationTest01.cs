@@ -12,6 +12,7 @@ using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
+
     public class IntegrationTests01
     {
 
@@ -23,13 +24,19 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         private ProductController? productController;
 
 
+       
         public IntegrationTests01()
         {
+            var projectPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(projectPath)
+                .AddJsonFile("appConfigTest.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("TestP3Referential");
+
             var options = new DbContextOptionsBuilder<P3Referential>()
-                .UseSqlServer("Data Source=.;Initial Catalog=TestBase;Integrated Security=True").Options;
-
-            IConfiguration configuration = new ConfigurationBuilder().Build();
-
+                .UseSqlServer(connectionString).Options;
 
             context = new P3Referential(options, configuration);
             LanguageService languageService = new();

@@ -1,7 +1,6 @@
 ﻿using Xunit;
 // ne pas oublier la référence au projet contenant le modèle
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels; 
-using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Moq;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
@@ -41,6 +40,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un prix manquant
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "Product", Price = "", Description = "Test", Stock = "1", Details = "test" });
 
         //Assert
@@ -53,17 +53,18 @@ public class ProductViewModelTests
     {
         //Arrange
         
-        var error = new LocalizedString("PriceNotANumber", "Price is not number");
+        var error = new LocalizedString("PriceNotANumber", "Price is not a number");
         mockStringLocalizer.Setup(ml => ml["PriceNotANumber"]).Returns(error);
 
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un prix qui n'est pas un nombre
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "Product", Price = "toto", Description = "Test", Stock = "1", Details = "test" });
 
         //Assert
 
-        Assert.Contains("Price is not an integer", result);
+        Assert.Contains("Price is not a number", result);
     }
 
     [Fact]
@@ -77,6 +78,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un prix inférieur ou égal à zéro
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "Product", Price = "0", Description = "Test", Stock = "1", Details = "test" });
 
         //Assert
@@ -95,6 +97,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un nom manquant
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "", Price = "2", Description = "Test", Stock = "1", Details = "test" });
 
         //Assert
@@ -113,6 +116,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un stock manquant
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "", Details = "test" });
 
         //Assert
@@ -131,6 +135,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un stock qui n'est pas un nombre entier
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "titi", Details = "test" });
 
         //Assert
@@ -149,6 +154,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product avec un stock inférieur ou égal à zéro
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "0", Details = "test" });
 
         //Assert
@@ -164,6 +170,7 @@ public class ProductViewModelTests
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
         //Act
+        //creation d'un product valide
         var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "toto", Price = "2.22", Description = "Test", Stock = "2", Details = "test" });
 
         //Assert

@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "TestP3Referential": "Data Source=.;Initial Catalog=TestBase;Integrated Security=True"
+  },
+  "DbProviderFactories": {
+    "Name": "Microsoft SqlClient Data Provider",
+    "Invariant": "Microsoft.Data.SqlClient",
+    "Description": "Microsoft SqlClient Data Provider for SqlServer",
+    "Type": "Microsoft.Data.SqlClient.SqlClientFactory, Microsoft.Data.SqlClient"
+  }
+}
