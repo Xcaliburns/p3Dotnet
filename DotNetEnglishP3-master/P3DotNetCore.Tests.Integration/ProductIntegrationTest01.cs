@@ -17,7 +17,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
     {
 
         //Arrange
-
+        // 
         private readonly IStringLocalizer<ProductService>? _localizer;
         private P3Referential? context;
         private ProductService? productService;
@@ -27,6 +27,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
         public IntegrationTests01()
         {
+            // Get the connection string for the test database
             var projectPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(projectPath)
@@ -38,6 +39,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var options = new DbContextOptionsBuilder<P3Referential>()
                 .UseSqlServer(connectionString).Options;
 
+            // Initialization 
             context = new P3Referential(options, configuration);
             LanguageService languageService = new();
             Cart cart = new();
