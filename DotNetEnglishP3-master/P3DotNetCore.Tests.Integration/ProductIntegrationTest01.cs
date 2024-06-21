@@ -17,7 +17,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
     {
 
         //Arrange
-        // 
+         
         private readonly IStringLocalizer<ProductService>? _localizer;
         private P3Referential? context;
         private ProductService? productService;
@@ -41,11 +41,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             // Initialization 
             context = new P3Referential(options, configuration);
-            LanguageService languageService = new();
             Cart cart = new();
             ProductRepository productRepository = new(context);
             OrderRepository orderRepository = new(context);
             productService = new(cart, productRepository, orderRepository, _localizer);
+            LanguageService languageService = new();
             productController = new(productService, languageService);
         }
 
