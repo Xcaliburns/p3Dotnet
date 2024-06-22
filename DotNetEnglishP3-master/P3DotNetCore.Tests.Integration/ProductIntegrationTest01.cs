@@ -1,7 +1,11 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using P3AddNewFunctionalityDotNetCore.Controllers;
 using P3AddNewFunctionalityDotNetCore.Data;
 using P3AddNewFunctionalityDotNetCore.Models;
@@ -44,10 +48,18 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Cart cart = new();
             ProductRepository productRepository = new(context);
             OrderRepository orderRepository = new(context);
-            productService = new(cart, productRepository, orderRepository, _localizer);
+
+            // Initialize the StringLocalizer
+            var localizationOptions = Options.Create(new LocalizationOptions());
+            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            var factory = new ResourceManagerStringLocalizerFactory(localizationOptions, loggerFactory);
+            var localizer = new StringLocalizer<ProductService>(factory);
+
+            productService = new(cart, productRepository, orderRepository, localizer);
             LanguageService languageService = new();
-            productController = new(productService, languageService);
+            productController = new(productService, languageService, localizer);
         }
+
 
         [Fact]
         public async Task SaveNewProduct()
@@ -83,6 +95,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             await context.SaveChangesAsync();
         }
 
+
+
         [Fact]
         public async Task DeleteProduct()
         {
@@ -101,7 +115,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             //Act
             //Delete the product
 
-            productController.DeleteProduct(product.Id);
+            productService.DeleteProduct(product.Id);
 
             //Assert
             //Verify if Product.Count has been decremented 
