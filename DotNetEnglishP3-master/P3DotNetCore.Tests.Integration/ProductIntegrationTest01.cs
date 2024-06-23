@@ -21,12 +21,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
     {
 
         //Arrange
-         
+
         private readonly IStringLocalizer<ProductService>? _localizer;
         private P3Referential? context;
         private ProductService? productService;
         private ProductController? productController;
-
 
 
         public IntegrationTests01()

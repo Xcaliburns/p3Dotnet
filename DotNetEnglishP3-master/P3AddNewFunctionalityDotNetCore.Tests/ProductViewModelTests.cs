@@ -117,7 +117,7 @@ public class ProductViewModelTests
         //Arrange
         var product = new ProductViewModel { Name = "Product", Price = "0", Description = "Test", Stock = "1", Details = "test" };
         //Act
-        var result = productService.CheckProductModelErrors( product, mockStringLocalizer.Object);
+        var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         //Assert
         Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["PriceNotGreaterThanZero"].Value, result);
@@ -129,7 +129,7 @@ public class ProductViewModelTests
     {
         //Arrange
         var product = new ProductViewModel { Name = "", Price = "2", Description = "Test", Stock = "1", Details = "test" };
-       
+
 
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
@@ -148,7 +148,7 @@ public class ProductViewModelTests
         //Arrange
         var product = new ProductViewModel { Name = "  ", Price = "2", Description = "Test", Stock = "1", Details = "test" };
         // error message to be returned when the name is blank
-        
+
 
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
@@ -183,7 +183,7 @@ public class ProductViewModelTests
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "   ", Details = "test" };
-       
+
         // creation of a new ProductService instance
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
@@ -201,7 +201,7 @@ public class ProductViewModelTests
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "titi", Details = "test" };
-               
+
         // creation of a new ProductService instance
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
@@ -221,7 +221,7 @@ public class ProductViewModelTests
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "0", Details = "test" };
-       
+
 
         // creation of a new ProductService instance
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
