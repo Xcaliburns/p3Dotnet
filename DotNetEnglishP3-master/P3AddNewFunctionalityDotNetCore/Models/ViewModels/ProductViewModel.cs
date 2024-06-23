@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using static P3AddNewFunctionalityDotNetCore.Models.ViewModels.PositiveNumberAttribute;
+
 
 
 namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 {
     public class ProductViewModel
     {
+
         [BindNever]
         public int Id { get; set; }
 
@@ -19,83 +20,37 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
         public string Details { get; set; }
 
         // verification order is important for some tests
-        private string stock;
+
         [Required(ErrorMessage = "MissingQuantity")]
-        // [TrimmedIntegerAttribute(ErrorMessage = "StockNotAnInteger")]
-        [RegularExpression(@"^-?\d+$", ErrorMessage = "StockNotAnInteger")]
+        [RegularExpression(@"^\s*-?\d+\s*$", ErrorMessage = "StockNotAnInteger")]
         [Range(1, int.MaxValue, ErrorMessage = "StockNotGreaterThanZero")]
         public string Stock
         {
-            get { return stock; }
-            set { stock = value.Trim(); }
+            get { return _stock; }
+            set
+            { // delete spaces before and after the number 
+                _stock = value.Trim();
+            }
         }
+        private string _stock;
 
-        // verification order is important for some tests
+
+        //// verification order is important for some tests
         [Required(ErrorMessage = "MissingPrice")]
-        // [RegularExpression(@"^-?\d+([.,]\d{1,2})?$", ErrorMessage = "PriceNotANumber")]
-        [DoubleFormatAttribute(ErrorMessage = "PriceNotANumber")]
-        // double.epsilon est la plus petite valeur au dessus de zero
-        [PositiveNumber(ErrorMessage = "PriceNotGreaterThanZero")]
-
-        public string Price { get; set; }
-    }
-
-    public class DoubleFormatAttribute : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        [RegularExpression(@"^\s*-?\d+([.,]\d+)?\s*$", ErrorMessage = "PriceNotANumber")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "PriceNotGreaterThanZero")]
+        public string Price
         {
-            if (value is string stringValue)
-            // Remove spaces before and after the number
+            get { return _price; }
+            set
             {
-                stringValue = stringValue.Trim();
-
-                if (!double.TryParse(stringValue.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out _))
-                {
-                    return new ValidationResult(ErrorMessage);
-                }
-            }
-
-            return ValidationResult.Success;
-        }
-    }
-
-    public class PositiveNumberAttribute : ValidationAttribute
-    {
-        public override bool IsValid(object value)
-        {
-
-
-            if (value is string stringValue)
-            {
-                stringValue = stringValue.Replace(',', '.');
-                if (double.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
-                {
-                    //return formated value
-                    return doubleValue > 0;
-                }
-            }
-            return false;
-        }
-
-
-        public class TrimmedIntegerAttribute : RegularExpressionAttribute
-        {
-            public TrimmedIntegerAttribute() : base(@"^-?\d+$")
-            {
-            }
-
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                if (value is string stringValue)
-                {
-                    
-                    // Use the base class's IsValid method to do the regex validation
-                    return base.IsValid(stringValue, validationContext);
-                }
-
-                return ValidationResult.Success;
+                // delete spaces before and after the number 
+                _price = value.Trim();
             }
         }
+        private string _price;
+
+
 
     }
 }
