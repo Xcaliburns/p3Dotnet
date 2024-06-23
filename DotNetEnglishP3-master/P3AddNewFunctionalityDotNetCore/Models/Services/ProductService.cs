@@ -95,51 +95,8 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             }
         }
 
-        // TODO this is an example method, remove it and perform model validation using data annotations
-        //public List<string> CheckProductModelErrors(ProductViewModel product)
-        //{
-        //    List<string> modelErrors = new List<string>();
-        //    if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
-        //    {
-        //        modelErrors.Add(_localizer["MissingName"]);
-        //    }
-
-
-        //    if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
-        //    {
-        //        modelErrors.Add(_localizer["MissingPrice"]);
-        //    }
-        //    // NumberStyles.Any, CultureInfo.InvariantCulture  => to allow the price to be a double with a dot or a comma
-        //    if (!double.TryParse(product.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceIsADouble))
-        //    {
-        //        modelErrors.Add(_localizer["PriceNotANumber"]); 
-        //    }
-
-
-        //    else
-        //    {
-        //        if (priceIsADouble <= 0)
-        //            modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
-        //    }
-
-
-        //    if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
-        //    {
-        //        modelErrors.Add(_localizer["MissingQuantity"]);
-        //    }
-
-        //    if (!int.TryParse(product.Stock, out int quantity))
-        //    {
-        //        modelErrors.Add(_localizer["StockNotAnInteger"]);
-        //    }
-        //    else
-        //    {
-        //        if (quantity <= 0)
-        //            modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
-        //    }
-
-        //    return modelErrors;
-        //}
+       
+     
         public List<string> CheckProductModelErrors(ProductViewModel product, IStringLocalizer localizer)
         {
             var errors = new List<string>();

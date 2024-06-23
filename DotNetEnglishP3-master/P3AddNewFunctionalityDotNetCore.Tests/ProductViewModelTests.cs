@@ -75,8 +75,10 @@ public class ProductViewModelTests
     [Fact]
     public void When_PriceIsMissing_Returns_ErrorMessage()
     {
+        //Arrange
+        var product = new ProductViewModel { Name = "Product", Price = "", Description = "Test", Stock = "1", Details = "test" };
         //Act
-        var result = productService.CheckProductModelErrors(new ProductViewModel { Name = "Product", Price = "", Description = "Test", Stock = "1", Details = "test" }, mockStringLocalizer.Object);
+        var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         //Assert
         Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingPrice"].Value, result);
