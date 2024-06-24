@@ -68,7 +68,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductViewModel expectedProduct = new() { Name = "toto", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
             //Get the number of products in the database
-            int count = await context.Product.CountAsync();
+            int count = productService.GetAllProducts().Count();
 
 
             //Act
@@ -77,10 +77,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             //Assert
             ////Verify if Product.Count has been incremented 
-            Assert.Equal(count + 1, context.Product.Count());
+            Assert.Equal(count + 1, productService.GetAllProducts().Count());
 
             //Search if the product exists in the database
-            var result = await context.Product.Where(x => x.Name == "toto").FirstOrDefaultAsync();
+           // var result = await context.Product.Where(x => x.Name == "toto").FirstOrDefaultAsync();
+            var result = productService.GetAllProducts().Where(x => x.Name == "toto").FirstOrDefault();
             Assert.NotNull(result);
             Assert.True(result.Name == expectedProduct.Name);
             Assert.True(result.Description == expectedProduct.Description);
@@ -104,11 +105,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductViewModel productViewModel = new() { Name = "titi", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
             //Get the number of products in the database
-            int count = await context.Product.CountAsync();
+            int count = productService.GetAllProducts().Count();
 
             //Create a product to delete
             productController.Create(productViewModel);
-            var product = await context.Product.Where(x => x.Name == "titi").FirstOrDefaultAsync();
+            var product = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
 
 
             //Act
@@ -118,11 +119,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             //Assert
             //Verify if Product.Count has been decremented 
-            Assert.Equal(count, context.Product.Count());
+            Assert.Equal(count, productService.GetAllProducts().Count());
 
             //Search the product in the database
-            var productDontExistsAnymore = await context.Product.Where(p => p.Name == "titi").FirstOrDefaultAsync();
-
+            //var productDontExistsAnymore = await context.Product.Where(p => p.Name == "titi").FirstOrDefaultAsync();
+            var productDontExistsAnymore = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
 
             //Verify if the Product has been deleted
             Assert.Null(productDontExistsAnymore);
