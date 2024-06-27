@@ -23,7 +23,7 @@ public class ProductViewModelTests
     private Mock<IStringLocalizer<ProductService>> mockStringLocalizer;
     private ProductService productService;
 
-    // Déclaration de votre dictionnaire d'erreurs ici
+    // Déclaration du dictionnaire d'erreurs ici
     private Dictionary<string, string> errorsEnglish = new Dictionary<string, string>
     {
         { "MissingPrice", "Price is missing" },
@@ -33,7 +33,7 @@ public class ProductViewModelTests
         { "StockNotAnInteger", "Stock is not an integer" },
         { "StockNotGreaterThanZero", "Stock must be greater than zero" },
         { "PriceNotGreaterThanZero", "Price must be greater than zero" }
-        // Ajoutez ici d'autres erreurs de validation que vous voulez tester
+        
     };
     private Dictionary<string, string> errorsFrench = new Dictionary<string, string>
     {
@@ -44,7 +44,7 @@ public class ProductViewModelTests
         { "StockNotAnInteger", "le stock n'est pas un entier" },
         { "StockNotGreaterThanZero", "le stock doit etre un nombre positif" },
         { "PriceNotGreaterThanZero", "le prix doit etre un nombre positif" }
-        // Ajoutez ici d'autres erreurs de validation que vous voulez tester
+        
     };
 
     public ProductViewModelTests()
@@ -55,7 +55,7 @@ public class ProductViewModelTests
         mockProductRepository = new Mock<IProductRepository>();
         mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
         productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
-        // Configuration de votre mockStringLocalizer ici
+        // Configuration du mockStringLocalizer ici
         foreach (var error in errorsEnglish)
         {
             var localizedString = new LocalizedString(error.Key, error.Value);
@@ -71,20 +71,26 @@ public class ProductViewModelTests
 
 
 
-
-    [Fact]
-    public void When_PriceIsMissing_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_PriceIsMissing_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "Product", Price = "", Description = "Test", Stock = "1", Details = "test" };
+
         //Act
         var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         //Assert
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingPrice"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingPrice"].Value, result);
     }
-    [Fact]
-    public void When_PriceIsBlank_Returns_ErrorMessage()
+
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_PriceIsBlank_Returns_ErrorMessage(string culture)
     {
 
         //Arrange
@@ -94,11 +100,13 @@ public class ProductViewModelTests
         var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         //Assert
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingPrice"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingPrice"].Value, result);
     }
 
-    [Fact]
-    public void When_PriceIsNotANumber_Returns_ErrorMessage()
+        [Theory]
+        [InlineData("en")]
+        [InlineData("fr")]
+        public void When_PriceIsNotANumber_Returns_ErrorMessage(string culture)
     {
         // Arrange
         var product = new ProductViewModel { Name = "Product", Price = "toto", Description = "Test", Stock = "1", Details = "test" };
@@ -107,12 +115,13 @@ public class ProductViewModelTests
         var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         // Assert
-        var expectedErrorMessage = mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["PriceNotANumber"].Value;
-        Assert.Contains(expectedErrorMessage, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["PriceNotANumber"].Value,result); 
     }
 
-    [Fact]
-    public void When_PriceIsNotGreaterThanZero_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_PriceIsNotGreaterThanZero_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "Product", Price = "0", Description = "Test", Stock = "1", Details = "test" };
@@ -120,12 +129,15 @@ public class ProductViewModelTests
         var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
 
         //Assert
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["PriceNotGreaterThanZero"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["PriceNotGreaterThanZero"].Value, result);
+       
     }
 
 
-    [Fact]
-    public void When_MissingName_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_MissingName_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "", Price = "2", Description = "Test", Stock = "1", Details = "test" };
@@ -139,11 +151,14 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingName"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingName"].Value, result);
+        
     }
 
-    [Fact]
-    public void When_NameIsBlank_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_NameIsBlank_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "  ", Price = "2", Description = "Test", Stock = "1", Details = "test" };
@@ -158,10 +173,13 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingName"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingName"].Value, result);
+        
     }
-    [Fact]
-    public void When_MissingQuantity_Returns_ErrorMessage()
+   
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_MissingQuantity_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "", Details = "test" };
@@ -175,11 +193,14 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingQuantity"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingQuantity"].Value, result);
+        
     }
 
-    [Fact]
-    public void When_QuantityIsBlank_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_QuantityIsBlank_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "   ", Details = "test" };
@@ -193,11 +214,14 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["MissingQuantity"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["MissingQuantity"].Value, result);
+        
     }
 
-    [Fact]
-    public void When_StockNotAnInteger_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_StockNotAnInteger_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "titi", Details = "test" };
@@ -211,13 +235,16 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["StockNotAnInteger"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["StockNotAnInteger"].Value, result);
+       
     }
 
 
 
-    [Fact]
-    public void When_StockNotGreaterThanZero_Returns_ErrorMessage()
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    public void When_StockNotGreaterThanZero_Returns_ErrorMessage(string culture)
     {
         //Arrange
         var product = new ProductViewModel { Name = "toto", Price = "2", Description = "Test", Stock = "0", Details = "test" };
@@ -232,14 +259,17 @@ public class ProductViewModelTests
 
         //Assert
         // check if the error message is returned
-        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo("en"))["StockNotGreaterThanZero"].Value, result);
+        Assert.Contains(mockStringLocalizer.Object.WithCulture(new CultureInfo(culture))["StockNotGreaterThanZero"].Value, result);
+        
     }
 
-    [Fact]
-    public void When_ModelIsValid_Returns_EmptyList()
+    [Theory]
+    [InlineData("toto", "2.22", "Test", "2", "test")]
+    [InlineData("tata", "3.33", "Test2", "  3  ", "test2")]
+    public void When_ModelIsValid_Returns_EmptyList(string name, string price, string description, string stock, string details)
     {
         //Arrange
-        var product = new ProductViewModel { Name = "toto", Price = "2.22", Description = "Test", Stock = "2", Details = "test" };
+        var product = new ProductViewModel { Name = name, Price = price, Description = description, Stock = stock, Details = details };
         // creation of a new ProductService instance
         var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
@@ -252,21 +282,6 @@ public class ProductViewModelTests
         Assert.True(result.Count == 0);
     }
 
-    [Fact]
-    public void When_ModelIsValid_StockHasSpaces_Returns_EmptyList()
-    {
-        //Arrange
-        var product = new ProductViewModel { Name = "toto", Price = "2.22", Description = "Test", Stock = "  2  ", Details = "test" };
-        // creation of a new ProductService instance
-        var productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrder.Object, mockStringLocalizer.Object);
 
-        //Act
-        //creation of a valid product
-        var result = productService.CheckProductModelErrors(product, mockStringLocalizer.Object);
-
-        //Assert
-        // check if the list is empty
-        Assert.True(result.Count == 0);
-    }
 
 }

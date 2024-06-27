@@ -80,7 +80,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.Equal(count + 1, productService.GetAllProducts().Count());
 
             //Search if the product exists in the database
-           // var result = await context.Product.Where(x => x.Name == "toto").FirstOrDefaultAsync();
+          
             var result = productService.GetAllProducts().Where(x => x.Name == "toto").FirstOrDefault();
             Assert.NotNull(result);
             Assert.True(result.Name == expectedProduct.Name);
@@ -122,7 +122,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.Equal(count, productService.GetAllProducts().Count());
 
             //Search the product in the database
-            //var productDontExistsAnymore = await context.Product.Where(p => p.Name == "titi").FirstOrDefaultAsync();
+          
             var productDontExistsAnymore = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
 
             //Verify if the Product has been deleted
