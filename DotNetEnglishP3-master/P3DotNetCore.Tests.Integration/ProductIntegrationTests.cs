@@ -17,18 +17,18 @@ using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
 
-    public class IntegrationTests01
+    public class IntegrationTests
     {
 
         //Arrange
-
         private readonly IStringLocalizer<ProductService>? _localizer;
         private P3Referential? context;
         private ProductService? productService;
         private ProductController? productController;
+        private Cart? cart;
 
 
-        public IntegrationTests01()
+        public IntegrationTests()
         {
             // Get the connection string for the test database
             var projectPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
@@ -36,9 +36,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
                 .SetBasePath(projectPath)
                 .AddJsonFile("appConfigTest.json")
                 .Build();
-
             var connectionString = configuration.GetConnectionString("TestP3Referential");
-
             var options = new DbContextOptionsBuilder<P3Referential>()
                 .UseSqlServer(connectionString).Options;
 
@@ -104,7 +102,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             ProductViewModel productViewModel = new() { Name = "titi", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
-            //Get the number of products in the database
+            //Get the number of products in productList
             int count = productService.GetAllProducts().Count();
 
             //Create a product to delete
@@ -121,12 +119,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             //Verify if Product.Count has been decremented 
             Assert.Equal(count, productService.GetAllProducts().Count());
 
-            //Search the product in the database
+            //Search the product in the productList
           
             var productDontExistsAnymore = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
-
-            //Verify if the Product has been deleted
+            
+            //Verify if the Product has been deleted from the cart
             Assert.Null(productDontExistsAnymore);
+            var productInCart = cart?.Lines.FirstOrDefault(x => x.Product.Id == product.Id);
+            Assert.Null(productInCart);
 
         }
 
