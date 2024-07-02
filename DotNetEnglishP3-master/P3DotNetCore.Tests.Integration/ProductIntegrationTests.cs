@@ -122,9 +122,9 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             //Search the product in the productList
           
             var productDontExistsAnymore = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
-            
-            //Verify if the Product has been deleted from the cart
             Assert.Null(productDontExistsAnymore);
+
+            //Verify if the Product has been deleted from the cart
             var productInCart = cart?.Lines.FirstOrDefault(x => x.Product.Id == product.Id);
             Assert.Null(productInCart);
 
