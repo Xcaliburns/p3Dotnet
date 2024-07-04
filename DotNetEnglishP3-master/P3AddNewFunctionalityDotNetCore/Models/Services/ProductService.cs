@@ -158,5 +158,13 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
             _productRepository.DeleteProduct(id);
         }
+
+
+        public ICart GetCart()
+        {
+            return _cart;
+        }
+
+
     }
 }

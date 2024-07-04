@@ -25,7 +25,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         private P3Referential? context;
         private ProductService? productService;
         private ProductController? productController;
-        private Cart? cart;
+        private CartController? cartController;
+        private readonly Cart? cart;
 
 
         public IntegrationTests()
@@ -42,6 +43,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             // Initialization 
             context = new P3Referential(options, configuration);
+            
             Cart cart = new();
             ProductRepository productRepository = new(context);
             OrderRepository orderRepository = new(context);
@@ -98,35 +100,39 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         [Fact]
         public async Task DeleteProduct()
         {
-            //Arrange        
-
+            // Arrange
             ProductViewModel productViewModel = new() { Name = "titi", Description = "Description ", Details = "Detail", Stock = "10", Price = "10 " };
 
-            //Get the number of products in productList
+            // Get the number of products in productList
             int count = productService.GetAllProducts().Count();
 
-            //Create a product to delete
+            // Create a product to delete
             productController.Create(productViewModel);
-            var product = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
+            var product = productService.GetAllProducts().FirstOrDefault(x => x.Name == "titi");
 
+            // Add the product to the cart
+            Cart cart = (Cart)productService.GetCart(); 
+            cart.AddItem(product, 1);
+            Assert.NotNull(cart.Lines.FirstOrDefault(x => x.Product.Id == product.Id));
 
-            //Act
-            //Delete the product
+            // Act
+            // Delete the product
+            productController.DeleteProduct(product.Id);
 
-            productService.DeleteProduct(product.Id);
-
-            //Assert
-            //Verify if Product.Count has been decremented 
+            // Assert
+            // Verify if Product.Count has been decremented 
             Assert.Equal(count, productService.GetAllProducts().Count());
 
-            //Search the product in the productList
-          
+            // Search the product in the productList          
             var productDontExistsAnymore = productService.GetAllProducts().Where(x => x.Name == "titi").FirstOrDefault();
+            var productDontExistsInCart = cart.Lines.FirstOrDefault(x => x.Product.Name == product.Name);
+            // Search if the product exists in the cart
+            Assert.Null(productDontExistsInCart);
+
+            // Verify if the Product has been deleted
             Assert.Null(productDontExistsAnymore);
 
-            //Verify if the Product has been deleted from the cart
-            var productInCart = cart?.Lines.FirstOrDefault(x => x.Product.Id == product.Id);
-            Assert.Null(productInCart);
+
 
         }
 
