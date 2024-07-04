@@ -20,7 +20,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
 
         public string Details { get; set; }
 
-       
+
         [Required(ErrorMessage = "MissingQuantity")]
         //here We accept all numbers, blanckspaces before and after the number are allowed
         [RegularExpression(@"^\s*-?\d+\s*$", ErrorMessage = "StockNotAnInteger")]
@@ -33,7 +33,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
                 _stock = value.Trim();
             }
         }
-       
+
 
         //// verification order is important for some tests
         [Required(ErrorMessage = "MissingPrice")]
@@ -49,7 +49,7 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
                 _price = value.Trim();
             }
         }
-       
+
     }
 }
 

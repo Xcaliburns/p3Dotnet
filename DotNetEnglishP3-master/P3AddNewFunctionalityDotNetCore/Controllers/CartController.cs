@@ -17,7 +17,7 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
             _productService = productService;
         }
 
-      
+
 
         public ViewResult Index()
         {

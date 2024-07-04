@@ -25,8 +25,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         private P3Referential? context;
         private ProductService? productService;
         private ProductController? productController;
-        private CartController? cartController;
-        private readonly Cart? cart;
+        
 
 
         public IntegrationTests()
@@ -43,7 +42,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
 
             // Initialization 
             context = new P3Referential(options, configuration);
-            
+
             Cart cart = new();
             ProductRepository productRepository = new(context);
             OrderRepository orderRepository = new(context);
@@ -80,7 +79,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Assert.Equal(count + 1, productService.GetAllProducts().Count());
 
             //Search if the product exists in the database
-          
+
             var result = productService.GetAllProducts().Where(x => x.Name == "toto").FirstOrDefault();
             Assert.NotNull(result);
             Assert.True(result.Name == expectedProduct.Name);
@@ -107,17 +106,17 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             int count = productService.GetAllProducts().Count();
 
             // Create a product to delete
-            productController.Create(productViewModel);
+            productController?.Create(productViewModel);
             var product = productService.GetAllProducts().FirstOrDefault(x => x.Name == "titi");
 
             // Add the product to the cart
-            Cart cart = (Cart)productService.GetCart(); 
+            Cart cart = (Cart)productService.GetCart();
             cart.AddItem(product, 1);
             Assert.NotNull(cart.Lines.FirstOrDefault(x => x.Product.Id == product.Id));
 
             // Act
             // Delete the product
-            productController.DeleteProduct(product.Id);
+            productController?.DeleteProduct(product.Id);
 
             // Assert
             // Verify if Product.Count has been decremented 
